@@ -3,7 +3,8 @@ from django.utils import timezone
 from .models import backupJob
 import subprocess
 from datetime import timedelta
-
+import os
+import glob
 
 @shared_task
 def run_scheduled_backups():
@@ -53,3 +54,14 @@ def backup_database(job_id):
 
     # Keep only last N backups
     cleanup_old_backups(job)
+    
+def cleanup_old_backups(job):
+    backup_dir = "/home/abdelkader/backups/"
+    pattern = f"{backup_dir}{job.name}_*.sql"
+
+    files = sorted(glob.glob(pattern), reverse=True)
+
+    if len(files) > job.keep_last:
+        for f in files[job.keep_last:]:
+            os.remove(f)
+            print("Deleted old backup:", f)
