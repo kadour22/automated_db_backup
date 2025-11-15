@@ -30,3 +30,26 @@ def run_scheduled_backups():
         if job.schedule_type == "monthly":
             if day_of_month == 1 and job.schedule_time.hour == current_time.hour and job.schedule_time.minute == current_time.minute:
                 backup_database(job.id)
+@shared_task
+def backup_database(job_id):
+    job = backupJob.objects.get(id=job_id)
+
+    filename = f"{job.name}_{timezone.now().strftime('%Y%m%d_%H%M%S')}.sql"
+    filepath = f"/home/abdelkader/backups/{filename}"
+
+    # Example for Postgres
+    command = [
+        "pg_dump",
+        f"--dbname=postgresql://{job.db_user}:{job.db_password}@{job.db_host}:{job.db_port}/{job.db_name}",
+        "-f",
+        filepath,
+    ]
+
+    try:
+        subprocess.run(command, check=True)
+        print(f"Backup created: {filepath}")
+    except Exception as e:
+        print(f"Backup failed: {e}")
+
+    # Keep only last N backups
+    cleanup_old_backups(job)
