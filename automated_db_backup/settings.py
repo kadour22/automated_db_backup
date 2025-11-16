@@ -143,4 +143,4 @@ CELERY_TIMEZONE = "Africa/Tunis"
 
 TENANT_MODEL = "customers.Client"
 
-TENANT_DOMAIN = "customers.Domain"
+TENANT_DOMAIN_MODEL = "customers.Domain"
