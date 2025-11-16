@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 
 def backups_list() :
     backups = backupJob.objects.all()
+    # print(req)
     serializer = BackupJobSerializer(backups, many=True)
     return Response(serializer.data , status=status.HTTP_200_OK)
 
