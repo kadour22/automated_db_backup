@@ -76,7 +76,7 @@ WSGI_APPLICATION = 'automated_db_backup.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django_tenants.postgresql_backend',
         'NAME': 'backup_db',
         'USER': 'postgres',
         'PASSWORD': 'zaza',
