@@ -10,6 +10,7 @@ click-repl==0.3.0
 cron_descriptor==2.0.6
 Django==4.2.3
 django-celery-beat==2.8.1
+django-tenants==3.9.0
 django-timezone-field==7.1
 djangorestframework==3.16.1
 djangorestframework_simplejwt==5.5.1
