@@ -18,5 +18,6 @@ class backup_api_list(APIView) :
     
 class ManualBackup(APIView):
     def post(self, request, job_id):
-        run_manual_backup_task.delay(job_id)
+        tenant_domain = request.tenant.domains.first().domain  
+        run_manual_backup_task.delay(job_id, tenant_domain)
         return Response({"message": "Backup started"})
