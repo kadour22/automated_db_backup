@@ -5,16 +5,8 @@ class BackupJobSerializer(serializers.ModelSerializer) :
     class Meta :
         model  = backupJob
         fields = [
-            "db_type","db_name","db_host","db_port","db_user","db_password","schedule_type"
+            "id", "name", "db_type", "db_name", "db_host", "db_port", 
+            "db_user", "db_password", "schedule_type", "schedule_time",
+            "keep_last", "is_active", "created_at"
         ]
-
-
-        {
-            "db_type":"postgres",
-            "db_name":"backup_db",
-            "db_host":"localhost",
-            "db_port":"5432",
-            "db_user":"postgres",
-            "db_password":"zaza",
-            "schedule_type":"manual"
-        }
+        read_only_fields = ["id", "created_at"]

@@ -2,6 +2,7 @@ from celery import shared_task
 from django_tenants.utils import schema_context
 from customers.models import Domain
 from .services_job.backup_runner import run_postgres_backup
+
 @shared_task
 def run_manual_backup_task(job_id, tenant_domain):
     try:
@@ -14,8 +15,10 @@ def run_manual_backup_task(job_id, tenant_domain):
             from .models import backupJob
             job = backupJob.objects.get(id=job_id)
             
-            # Run backup with the tenant's schema name
-            result = run_postgres_backup(job, schema_name=tenant.schema_name)
+            # Run backup using job's DB credentials
+            # schema_name is optional - only use if tenant is using shared DB with schema isolation
+            # If tenant has their own DB, schema_name will be None and entire DB will be backed up
+            result = run_postgres_backup(job, schema_name=None)
             
             if result.endswith('.sql'):
                 return f"Backup successful: {result}"

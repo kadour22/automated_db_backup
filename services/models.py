@@ -25,11 +25,6 @@ class backupJob(models.Model) :
 
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def save(self, *args, **kwargs):
-        if not self.pk and backupJob.objects.exists() :
-            raise Exception('Only one backupJob instance allowed.')
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return self.name
 

@@ -145,10 +145,3 @@ CELERY_TIMEZONE = "Africa/Tunis"
 TENANT_MODEL = "customers.Client"
 
 TENANT_DOMAIN_MODEL = "customers.Domain"
-
-{
-        "db_name": "backup_db",
-        "db_user": "postgres",
-        "db_password": "zaza",
-        "db_host": "localhost"
-}
