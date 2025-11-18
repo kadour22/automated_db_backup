@@ -33,3 +33,5 @@ def delete_backup(request,backup_id) :
     backup = get_object_or_404(backupJob,id=backup_id)
     backup.delete()
     return Response({"message":"Backup deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
+#  5 . count backups

@@ -33,11 +33,3 @@ class backupJob(models.Model) :
     def __str__(self):
         return self.name
 
-class backupHistory(models.Model) :
-    backup_job = models.ForeignKey(backupJob, on_delete=models.CASCADE, related_name='histories')
-    backup_date = models.DateTimeField(auto_now_add=True)
-    backup_count = models.IntegerField(default=0)
-    def __str__(self):
-        return f"Backup for {self.backup_job.name} on {self.backup_date}"
-    
-
