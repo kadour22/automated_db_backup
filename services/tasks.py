@@ -59,3 +59,7 @@ def check_backup_jobs():
             # weekly check: same weekday + time
             if job.created_at.weekday() == current_weekday and job.schedule_time == current_time:
                 run_manual_backup_task.delay(job.id, job.tenant_domain)
+        
+        if job.schedule_type == "monthly":
+            if job.created_at.day == current_day and job.schedule_time == current_time:
+                run_manual_backup_task.delay(job.id, job.tenant_domain)
