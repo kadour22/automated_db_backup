@@ -3,8 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .tasks import *
 
-class backup_api_list(APIView) :
-    
+class backup_api_list(APIView) :    
     # detail && list view
     def get(self, request,backup_id=None) :
         if backup_id is not None:
