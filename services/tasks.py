@@ -53,3 +53,9 @@ def check_backup_jobs():
         if job.schedule_type == "daily":
             if job.schedule_time == current_time:
                 run_postgres_backup.delay(job.id)
+
+        # WEEKLY
+        if job.schedule_type == "weekly":
+            # weekly check: same weekday + time
+            if job.created_at.weekday() == current_weekday and job.schedule_time == current_time:
+                run_manual_backup_task.delay(job.id, job.tenant_domain)
