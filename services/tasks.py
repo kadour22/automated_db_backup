@@ -7,18 +7,15 @@ from .models import backupJob
 @shared_task
 def run_manual_backup_task(job_id, tenant_domain):
     try:
-        # Get tenant from domain (public schema)
+
         domain = Domain.objects.select_related('tenant').get(domain=tenant_domain)
+        # print("domaine is :",domain)
         tenant = domain.tenant
-        
+        print("tenant is :",tenant)
         # Access job info within tenant schema
         with schema_context(tenant.schema_name):
             from .models import backupJob
             job = backupJob.objects.get(id=job_id)
-            
-            # Run backup using job's DB credentials
-            # schema_name is optional - only use if tenant is using shared DB with schema isolation
-            # If tenant has their own DB, schema_name will be None and entire DB will be backed up
             result = run_postgres_backup(job, schema_name=None)
             
             if result.endswith('.sql'):
