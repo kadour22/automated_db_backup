@@ -29,3 +29,10 @@ class backupJob(models.Model) :
         return self.name
     
 
+class BackFile(models.Model):
+    job = models.ForeignKey(backupJob, on_delete=models.CASCADE, related_name='files')
+    backup_file = models.FileField(upload_to='backups/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.file_name} - {self.job.name}"

@@ -9,3 +9,4 @@ urlpatterns = [
     # Trigger manual backup task
     path('backups/<int:job_id>/run/', views.ManualBackup.as_view(), name='backup-run'),
 ]
+

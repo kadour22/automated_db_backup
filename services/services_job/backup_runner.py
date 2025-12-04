@@ -2,49 +2,57 @@ import os
 import subprocess
 from datetime import datetime
 
+
 def run_postgres_backup(job, schema_name=None):
+    """Run a PostgreSQL backup for a job, optionally for a tenant schema."""
+
+    # Timestamped filename
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    
     file_label = schema_name if schema_name else job.name
     filename = f"{file_label}_{timestamp}.sql"
 
-    backup_dir = 'backups/'
+    # Create backup directory if missing
+    backup_dir = "backups/"
     os.makedirs(backup_dir, exist_ok=True)
     file_path = os.path.join(backup_dir, filename)
 
+    # Prepare pg_dump command
     command = [
         "pg_dump",
         "-h", job.db_host,
         "-p", str(job.db_port),
         "-U", job.db_user,
-        "-d", job.db_name,     # FIXED (IMPORTANT)
-        "-F", "p",
+        "-d", job.db_name,   # Database name (important)
+        "-F", "p",           # Plain SQL format
         "--no-owner",
-        "--no-acl"
+        "--no-acl",
     ]
 
-    # Add tenant schema if provided
-    if schema_name and schema_name.strip():
-        command.extend(["-n", schema_name])
+    # Add schema only if provided
+    if schema_name:
+        schema_name = schema_name.strip()
+        if schema_name:
+            command.extend(["-n", schema_name])
 
+    # Export password for pg_dump
     env = os.environ.copy()
-    env['PGPASSWORD'] = job.db_password
+    env["PGPASSWORD"] = job.db_password
 
     try:
-        # Write using stdout redirection (safer than -f)
         with open(file_path, "w") as f:
             result = subprocess.run(
                 command,
-                env=env,
                 stdout=f,
                 stderr=subprocess.PIPE,
-                text=True
+                env=env,
+                text=True,
             )
 
+        # Check pg_dump errors
         if result.returncode != 0:
             return f"Backup error: {result.stderr}"
 
-        # Validate file size
+        # Detect empty/invalid file
         if os.path.getsize(file_path) < 500:
             return f"Warning: Backup file seems empty ({file_path})"
 
