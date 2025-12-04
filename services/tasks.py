@@ -33,8 +33,8 @@ def run_manual_backup_task(job_id, tenant_domain):
 def check_backup_jobs():
     now = timezone.localtime()
     current_time = now.time().replace(second=0, microsecond=0)
-    current_weekday = now.weekday()       # Monday = 0 ... Sunday = 6
-    current_day = now.day                 # 1 → 31
+    current_weekday = now.weekday()       
+    current_day = now.day                 
 
     jobs = backupJob.objects.filter(is_active=True)
 
